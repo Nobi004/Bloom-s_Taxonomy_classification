@@ -94,6 +94,42 @@ class BloomsDataPreprocessor:
             'val': {'text': X_val, 'labels': y_val},
             'test': {'text': X_test, 'labels': y_test}
         }
+    
+    def save_splits(self, splits, output_dir):
+        """Save train/val/test splits to files."""
+        os.makedirs(output_dir, exist_ok=True)
+        
+        for split_name, split_data in splits.items():
+            split_df = pd.DataFrame({
+                'text': split_data['text'],
+                'labels': split_data['labels']
+            })
+            split_df.to_csv(f"{output_dir}/{split_name}.csv", index=False)
+        
+        # Save label encoder
+        with open(f"{output_dir}/label_encoder.pkl", 'wb') as f:
+            pickle.dump(self, f)
+        
+        print(f"Splits saved to {output_dir}")
+
+def main():
+    """Main preprocessing pipeline"""
+    data_path = "data/blooms.csv"
+    output_dir = "artifacts/data"
+
+    # Initialize preprocessor 
+    preprocessor = BloomsDataPreprocessor()
+    
+    # Load and preprocess data 
+    df = preprocessor.load_and_preprocess(data_path)
+    splits = preprocessor.create_splits(df)
+    preprocessor.save_splits(splits,output_dir)
+
+    print("Data preprocessing completed!")
+
+if __name__ == "__main__":
+    main()
+    
 
 
 
