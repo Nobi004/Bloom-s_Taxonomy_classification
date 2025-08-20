@@ -67,7 +67,33 @@ class BloomsDataPreprocessor:
 
         return df          
     
-    
+    def create_splits(self,df,test_size=0.1,val_size=0.1,random_state=42):
+        """Create stratified train/val/test splits."""
+        X = df['cleaned_text'].values
+        y = df['encoded_label'].values
+        
+        # First split: train+val vs test
+        X_temp, X_test, y_temp, y_test = train_test_split(
+            X, y, test_size=test_size, random_state=random_state, 
+            stratify=y
+        )
+        
+        # Second split: train vs val
+        val_size_adjusted = val_size / (1 - test_size)
+        X_train, X_val, y_train, y_val = train_test_split(
+            X_temp, y_temp, test_size=val_size_adjusted, 
+            random_state=random_state, stratify=y_temp
+        )
+        
+        print(f"Train: {len(X_train)} samples")
+        print(f"Val: {len(X_val)} samples") 
+        print(f"Test: {len(X_test)} samples")
+        
+        return {
+            'train': {'text': X_train, 'labels': y_train},
+            'val': {'text': X_val, 'labels': y_val},
+            'test': {'text': X_test, 'labels': y_test}
+        }
 
 
 
