@@ -114,7 +114,7 @@ class BloomsDataPreprocessor:
 
 def main():
     """Main preprocessing pipeline"""
-    data_path = "data/blooms.csv"
+    data_path = "D:\\new project\\Bloom-s_Taxonomy_classification\\data\\blooms.csv"
     output_dir = "artifacts/data"
 
     # Initialize preprocessor 
@@ -129,7 +129,7 @@ def main():
 
 if __name__ == "__main__":
     main()
-    
+
 
 
 
